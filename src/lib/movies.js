@@ -1,6 +1,7 @@
 class Movies {
   constructor(apiKey) {
     this.apiKey = apiKey
+    this.hannibalUrl = "localhost"
   }
 
   async configuration(key) {
@@ -11,24 +12,32 @@ class Movies {
   }
 
   async search(title) {
-    const configuration = await this.configuration('images')
-    const data = await this.fetch('search/movie', { page: 1, query: title })
-    return data.results.slice(0, 10).map(({
-      id,
-      title,
-      poster_path,
-      release_date
-    }) => ({
-      id,
-      title,
-      year: parseInt(release_date.substring(0, 4), 10),
-      image: `${configuration.base_url}w300${poster_path}`
+    const hannibal = await this.fetchHannibal();
+    console.log(hannibal);
+    return hannibal.slice(0, 10).map(movie => ({
+      id: "123",
+      title: movie.substring(0, movie.length - 7),
+      year: /\(([0-9][0-9][0-9][0-9])\)/.exec(movie)[1],
+      image: "http://weknowyourdreams.com/images/dog/dog-13.jpg"
     }))
+  }
+  
+  async getImage(title, year) {
+    const data = await this.fetch('search/movie', { page: 1, query: title, year });
+    // Validate that we select the correct movie from the list returned
+    const configuration = await this.configuration('images');
+    const image_path = `${configuration.base_url}w300${data.results[0].poster_path}`
+    return image_path
   }
 
   async fetch(action, parameters = {}) {
     return fetch(this.url(action, parameters)).then(response =>
       response.json())
+  }
+
+  async fetchHannibal() {
+    return fetch(`http://${this.hannibalUrl}:5000/movies`)
+      .then(response => response.json())
   }
 
   url(action, parameters = {}) {

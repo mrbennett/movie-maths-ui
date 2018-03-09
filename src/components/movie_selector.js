@@ -103,10 +103,21 @@ export default class MovieSelector extends Component {
     this.changed(undefined)
   }
 
-  changed(movie) {
-    const { onChange } = this.props
-    const value = movie ? movie.title : ''
-    this.setState({ value, movies: [] })
-    onChange && onChange(movie)
+  async changed(movie) {
+    console.log("have selected");
+    const { onChange } = this.props;
+
+    let value;
+    
+    if (movie) {
+      value = movie.title;
+      movie.image = await Movies.getImage(movie.title, movie.year);
+
+    } else {
+      value = '';
+    }
+
+    this.setState({ value, movies: [] });
+    onChange && onChange(movie);
   }
 }
