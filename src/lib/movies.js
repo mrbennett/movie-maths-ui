@@ -1,7 +1,7 @@
 class Movies {
   constructor(apiKey) {
     this.apiKey = apiKey
-    this.hannibalUrl = "localhost"
+    this.hannibalUrl = "ec2-54-236-252-18.compute-1.amazonaws.com"
   }
 
   async configuration(key) {
@@ -13,7 +13,7 @@ class Movies {
 
   async search(title) {
     const hannibal = await this.fetchHannibal(title);
-    console.log(hannibal);
+    console.log('Search results:', hannibal);
     return hannibal.slice(0, 10).map(movie => ({
       id: Math.random() * 100,
       title: movie.substring(0, movie.length - 7),
@@ -41,15 +41,16 @@ class Movies {
   }
 
   async addMovies(movie1, movie2) {
-    // return fetch(`http://${this.hannibalUrl}:5000/add?movie1=${movie1}&movie2=${movie2}`)
-    //   .then(response => response.json());
     console.log(movie1, 'plus', movie2);
+    return fetch(`http://${this.hannibalUrl}:5000/add?movie_imdb_1=${movie1}&movie_imdb_2=${movie2}`)
+      .then(response => response.json());
   }
 
   async subtractMovies(movie1, movie2) {
-    // return fetch(`http://${this.hannibalUrl}:5000/subtract?movie1=${movie1}&movie2=${movie2}`)
-    //   .then(response => response.json());
     console.log(movie1, 'minus', movie2);
+    console.log(this);
+    return fetch(`http://${this.hannibalUrl}:5000/subtract?movie_imdb_1=${movie1}&movie_imdb_2=${movie2}`)
+      .then(response => response.json());
   }
 
   async getByImdbId(id) {

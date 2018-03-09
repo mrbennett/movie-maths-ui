@@ -85,11 +85,11 @@ class App extends Component {
 
   async calculateMovies(operation) {
     const movieOperation = operation === 'plus'
-        ? Movies.addMovies
-        : Movies.subtractMovies;
+        ? Movies.addMovies.bind(Movies)
+        : Movies.subtractMovies.bind(Movies);
 
-    const movieId = movieOperation(this.state.first.id, this.state.second.id)
-
+    const movieId = movieOperation(this.state.first.id, this.state.second.id);
+    // Use actual movieId
     const resultMovie = await Movies.getByImdbId('tt0097814');
 
     const movieObject =
