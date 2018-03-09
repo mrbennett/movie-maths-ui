@@ -1,7 +1,7 @@
 class Movies {
   constructor(apiKey) {
     this.apiKey = apiKey;
-    this.hannibalUrl = 'ec2-54-205-45-91.compute-1.amazonaws.com';
+    this.hannibalUrl = 'ec2-54-161-234-130.compute-1.amazonaws.com';
   }
 
   async configuration(key) {
@@ -15,9 +15,9 @@ class Movies {
     const hannibal = await this.fetchHannibal(title);
     console.log('Search results:', hannibal);
     return hannibal.slice(0, 10).map((movie) => ({
-      id: Math.random() * 100,
-      title: movie.substring(0, movie.length - 7),
-      year: /\(([0-9][0-9][0-9][0-9])\)/.exec(movie)[1],
+      id: movie.IMDbId,
+      title: movie.simpleTitle,
+      year: movie.release_year,
       image: 'http://weknowyourdreams.com/images/dog/dog-13.jpg',
     }));
   }
@@ -34,8 +34,8 @@ class Movies {
     return fetch(this.url(action, parameters)).then((response) => response.json());
   }
 
-  async fetchHannibal() {
-    return fetch(`http://${this.hannibalUrl}:5000/movies`).then((response) => response.json());
+  async fetchHannibal(title) {
+    return fetch(`http://${this.hannibalUrl}:5000/movies?query=${title}`).then((response) => response.json());
   }
 
   async addMovies(movie1, movie2) {
