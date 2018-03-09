@@ -12,10 +12,10 @@ class Movies {
   }
 
   async search(title) {
-    const hannibal = await this.fetchHannibal();
+    const hannibal = await this.fetchHannibal(title);
     console.log(hannibal);
     return hannibal.slice(0, 10).map(movie => ({
-      id: "123",
+      id: Math.random() * 100,
       title: movie.substring(0, movie.length - 7),
       year: /\(([0-9][0-9][0-9][0-9])\)/.exec(movie)[1],
       image: "http://weknowyourdreams.com/images/dog/dog-13.jpg"
@@ -31,13 +31,30 @@ class Movies {
   }
 
   async fetch(action, parameters = {}) {
-    return fetch(this.url(action, parameters)).then(response =>
-      response.json())
+    return fetch(this.url(action, parameters))
+      .then(response => response.json());
   }
 
   async fetchHannibal() {
     return fetch(`http://${this.hannibalUrl}:5000/movies`)
-      .then(response => response.json())
+      .then(response => response.json());
+  }
+
+  async addMovies(movie1, movie2) {
+    // return fetch(`http://${this.hannibalUrl}:5000/add?movie1=${movie1}&movie2=${movie2}`)
+    //   .then(response => response.json());
+    console.log(movie1, 'plus', movie2);
+  }
+
+  async subtractMovies(movie1, movie2) {
+    // return fetch(`http://${this.hannibalUrl}:5000/subtract?movie1=${movie1}&movie2=${movie2}`)
+    //   .then(response => response.json());
+    console.log(movie1, 'minus', movie2);
+  }
+
+  async getByImdbId(id) {
+    return this.fetch(`find/${id}`, {external_source:'imdb_id'})
+      .then(result => result.movie_results[0]); 
   }
 
   url(action, parameters = {}) {

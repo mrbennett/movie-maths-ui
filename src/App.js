@@ -3,6 +3,7 @@ import './stylesheets/App.css'
 import Movie from './components/movie'
 import Operator from './components/operator'
 import TMDBLogo from './tmdb_logo.svg'
+import Movies from './lib/movies'
 
 const sample = {
   cowboys: {
@@ -73,18 +74,38 @@ class App extends Component {
     )
   }
 
-  change(which, movie) {
+  async change(which, movie) {
     this.setState({ [which]: movie })
-    if (!movie) {
+    if (!movie || !this.state.first || !this.state.second) {
       this.setState({ third: undefined, loading: true })
-    } else {
-      this.setState({ third: sample.cowboys_and_aliens, loading: false })
+    } else { 
+      await this.calculateMovies(this.state.operation)
     }
   }
 
+  async calculateMovies(operation) {
+    const movieOperation = operation === 'plus'
+        ? Movies.addMovies
+        : Movies.subtractMovies;
+
+    const movieId = movieOperation(this.state.first.id, this.state.second.id)
+
+    const resultMovie = await Movies.getByImdbId('tt0097814');
+
+    const movieObject =
+    {
+      id: resultMovie.id,
+      title: resultMovie.title,
+      year: resultMovie.release_date.split("-")[0],
+      image: `http://image.tmdb.org/t/p/w300${resultMovie.poster_path}`
+    }
+
+    this.setState({ third: movieObject, loading: false, operation });
+  }
+
   changeOperation() {
-    const operation = this.state.operation === 'plus' ? 'minus' : 'plus'
-    this.setState({ operation })
+    const operation = this.state.operation === 'plus' ? 'minus' : 'plus';
+    this.calculateMovies(operation);
   }
 }
 

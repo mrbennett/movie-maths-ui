@@ -104,7 +104,6 @@ export default class MovieSelector extends Component {
   }
 
   async changed(movie) {
-    console.log("have selected");
     const { onChange } = this.props;
 
     let value;
