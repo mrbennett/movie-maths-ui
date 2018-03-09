@@ -8,10 +8,7 @@ import './lib/examples';
 import getExampleEquation from './lib/examples';
 
 class App extends Component {
-  state = {
-    ...getExampleEquation(),
-    operation: 'plus',
-  };
+  state = { ...getExampleEquation() };
 
   constructor(props) {
     super(props);
