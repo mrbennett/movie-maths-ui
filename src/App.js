@@ -8,7 +8,17 @@ import './lib/examples';
 import getExampleEquation from './lib/examples';
 
 class App extends Component {
-  state = { ...getExampleEquation() };
+  state = {
+    first: {},
+    second: {},
+    third: {},
+    operation: 'plus',
+  };
+
+  async componentDidMount() {
+    const example = await getExampleEquation();
+    this.setState({ ...example });
+  }
 
   constructor(props) {
     super(props);

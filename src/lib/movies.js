@@ -58,7 +58,7 @@ class Movies {
   }
 
   url(action, parameters = {}) {
-    var url = `https://api.themoviedb.org/3/${action}?language=en-US` + `&api_key=${this.apiKey}`;
+    var url = `https://api.themoviedb.org/3/${action}?language=en-US&api_key=${this.apiKey}`;
     for (var key in parameters) {
       url += `&${key}=${encodeURIComponent(parameters[key])}`;
     }
