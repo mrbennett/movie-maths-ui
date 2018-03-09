@@ -67,12 +67,12 @@ class App extends Component {
   async calculateMovies(operation) {
     const movieOperation = operation === 'plus' ? Movies.addMovies.bind(Movies) : Movies.subtractMovies.bind(Movies);
 
-    const movieId = movieOperation(this.state.first.id, this.state.second.id);
+    const movieId = await movieOperation(this.state.first.id, this.state.second.id);
     // Use actual movieId
-    const resultMovie = await Movies.getByImdbId('tt0097814');
+    const resultMovie = await Movies.getByImdbId(movieId);
 
     const movieObject = {
-      id: resultMovie.id,
+      id: movieId,
       title: resultMovie.title,
       year: resultMovie.release_date.split('-')[0],
       image: `http://image.tmdb.org/t/p/w300${resultMovie.poster_path}`,
